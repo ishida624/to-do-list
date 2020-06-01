@@ -20,26 +20,31 @@
 
 <?php
 header("Connect-Type:text/html ; charset = utf8");
-include("pdo-test.php");
+//include("pdo-test.php");
+//include("lib/Pdocon.php");
+include("vendor/autoload.php");
+include("lib/pdo-config.php");
+use Pdocon\Pdocon;
+
+$db_link = new Pdocon($servername, $username, $password, $dbname);
 
 $sql_query = "select * from t1 order by no ASC";
-$result = $db_link -> query($sql_query);
-//$total = $result -> PDO:: NUM_ROWS;
+$result =$db_link->db_link->query($sql_query);
+
 $i = 1;
-while($row_result = $result ->fetch(PDO::FETCH_ASSOC))
-{
-//$row_result = $result->fetch(PDO::FETCH_ASSOC);
-//	foreach ($row_result as  $key=>$value) {
-echo "<tr>";
-echo "<td>".	"<input type='radio' name='radio' value=".$row_result['no'].">"."</td>";
-//echo  "<td>".$row_result['no']."</td>";
-echo  "<td>$i</td>";
-echo  "<td>".$row_result['item']."</td>";
-echo  "<td>".$row_result['status']."</td>";
-//echo  "<td>"."<a href = 'update.php?no=".$row_result['no']."'> 修改</a>"."</td>";
-//echo  "<td>"."<a href = 'delete.php?no=".$row_result['no']."'> 刪除</a>"."</td>";
-echo  "</tr>";
-$i++;
+while ($row_result = $result ->fetch(PDO::FETCH_ASSOC)) {
+    //$row_result = $result->fetch(PDO::FETCH_ASSOC);
+    //	foreach ($row_result as  $key=>$value) {
+    echo "<tr>";
+    echo "<td>".	"<input type='radio' name='radio' value=".$row_result['no'].">"."</td>";
+    //echo  "<td>".$row_result['no']."</td>";
+    echo  "<td>$i</td>";
+    echo  "<td>".$row_result['item']."</td>";
+    echo  "<td>".$row_result['status']."</td>";
+    //echo  "<td>"."<a href = 'update.php?no=".$row_result['no']."'> 修改</a>"."</td>";
+    //echo  "<td>"."<a href = 'delete.php?no=".$row_result['no']."'> 刪除</a>"."</td>";
+    echo  "</tr>";
+    $i++;
 }
 
 ?>
@@ -53,16 +58,15 @@ $i++;
 
 
 <?php
-if(isset ($_GET['update']) == true || isset($_GET['delete']) == true || isset($_GET['complete']) == true)
-{
-if ($_GET['update'] == '修改') {
-	header("Location:update.php?radio=".$_GET['radio']."");
-}
-if ($_GET['delete'] == '刪除') {
-	header("Location:delete.php?radio=".$_GET['radio']."");
-}
-if ($_GET['complete'] == '已完成/未完成') {
-	header("Location:complete.php?radio=".$_GET['radio']."");
-}
+if (isset($_GET['update']) == true || isset($_GET['delete']) == true || isset($_GET['complete']) == true) {
+    if ($_GET['update'] == '修改') {
+        header("Location:update.php?radio=".$_GET['radio']."");
+    }
+    if ($_GET['delete'] == '刪除') {
+        header("Location:delete.php?radio=".$_GET['radio']."");
+    }
+    if ($_GET['complete'] == '已完成/未完成') {
+        header("Location:complete.php?radio=".$_GET['radio']."");
+    }
 }
  ?>

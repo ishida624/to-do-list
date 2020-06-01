@@ -1,14 +1,16 @@
 <?php
-if (isset($_GET["action"])=="add")
-{
-include("pdo-test.php");
-$sql_query = "update t1 set no=?,item=? where no=?";
-$stmt = $db_link -> prepare($sql_query);
-//$stmt -> bind_param("is",$_GET["no"],$_GET["item"]);
-$stmt -> execute(array($_GET["no"],$_GET["item"],$_GET["no"]));
-//$stmt ->close();
-//$db_link -> close();
-header("Location:todolist.php");
+include("vendor/autoload.php");
+include("lib/pdo-config.php");
+use Pdocon\Pdocon;
+
+$db_link = new Pdocon($servername, $username, $password, $dbname);
+if (isset($_GET["action"])=="add") {
+    $sql_query = "update t1 set no=?,item=? where no=?";
+    $stmt = $db_link ->db_link-> prepare($sql_query);
+
+    $stmt -> execute(array($_GET["no"],$_GET["item"],$_GET["no"]));
+
+    header("Location:todolist.php");
 }
 ?>
 <html>

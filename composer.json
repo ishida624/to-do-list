@@ -1,0 +1,17 @@
+{
+    "name": "gill/todolist",
+    "description": "to do list",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Gill",
+            "email": "ishida624@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload":{
+    	"psr-4":{
+	"Pdocon\\":"lib/"
+	}
+    }
+}
