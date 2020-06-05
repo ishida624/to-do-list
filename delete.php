@@ -1,19 +1,22 @@
 <?php
 include("vendor/autoload.php");
 include("lib/pdo-config.php");
-use Pdocon\Pdocon;
+use lib\Pdocon;
 
-$db_link = new Pdocon($servername, $username, $password, $dbname);
+session_start();
+if (isset($_SESSION['member'])) {
+    $db_link = new Pdocon($servername, $username, $password, $dbname);
 
-if (isset($_GET["action"])=="add") {
-    $sql_query = "delete from t1  where no=?";
-    $stmt = $db_link ->db_link-> prepare($sql_query);
+    if (isset($_GET["action"])=="add") {
+        $sql_query = "delete from t1  where no=?";
+        $stmt = $db_link ->db_link-> prepare($sql_query);
 
-    //$stmt -> bind_param("is",$_GET["no"],$_GET["item"]);
-    $stmt -> execute(array($_GET["no"]));
-    //$stmt ->close();
-    //$db_link -> close();
-    header("Location:todolist.php");
+        $stmt -> execute(array($_GET["no"]));
+        header("Location:todolist.php");
+    }
+} else {
+    echo "請先登<br>";
+    echo "<a href=session.test.php>登入</a><br>";
 }
 ?>
 <html>

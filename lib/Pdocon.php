@@ -1,6 +1,6 @@
 <?php
 
-namespace Pdocon;
+namespace lib;
 
 class Pdocon
 {
