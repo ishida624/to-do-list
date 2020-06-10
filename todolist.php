@@ -5,33 +5,25 @@
 <body>
 	<meta charset="utf-8">
 	<?php
+    include __DIR__ . '/app/Pdo_start.php';
+    include __DIR__ . '/app/models/todolist_model.php';
+    include __DIR__ . '/app/models/admin_model.php';
     session_start();
-    include("vendor/autoload.php");
-    include("lib/pdo-config.php");
-    use lib\Pdocon;
     use lib\getRemoteIPAddress;
 
     $get_ip = new getRemoteIPAddress;
     $ip = $get_ip->getRemoteIPAddress();
-    $db_link = new Pdocon($servername, $username, $password, $dbname);
     if (isset($_SESSION['member'])) {
-        //echo $_SESSION['member'];
         $user = $_SESSION['member'];
-        $sql_query = "select user_info from admin where admin='$user'";
-        $admin = $db_link->db_link->query($sql_query);
-        foreach ($admin-> fetchAll(PDO::FETCH_ASSOC) as $value) {
-            if ($value["user_info"] != $ip) {
-                echo "帳號已有其他裝置登入";
+        $admin = Admin::where('admin', $user)->get();
+        foreach ($admin as $value) {
+            if ($value['user_info'] != $ip) {
                 unset($_SESSION["member"]);
                 header("Location:todolist.php");
             }
         }
     }
-        #$_SESSION['login_stauts'] = 0 沒有別的裝置登入	，1 為有其他裝置登入 ，2 訪客
-        // if (!isset($_SESSION['login_stauts'])) {
-        //     $_SESSION['login_stauts'] = 2;
-        // }
-        //echo $_SESSION['login_stauts'];
+
         if (isset($_SESSION["member"])) {
             echo "使用者：".$_SESSION["member"]."<br>";
             echo "<a href=session.test.php?logout=ture>登出</a>";
@@ -47,12 +39,7 @@
 		<input type="reset">
 		<br>
 		</form>
-<!-- <?php
-        // if ($_SESSION['login_stauts'] == 1) {
-        //     echo "帳號已有其他裝置登入";
-        //     $_SESSION["member"] = "";
-        // }
-        ?> -->
+
 
 <form action=" " method="get" >
 <table  width= "700" border="1" >
@@ -60,35 +47,24 @@
 <?php
 header("Connect-Type:text/html ; charset = utf8");
 
-        // include("vendor/autoload.php");
-        // include("lib/pdo-config.php");
-        // use Pdocon\Pdocon;
-//
-         $db_link = new Pdocon($servername, $username, $password, $dbname);
-
-        $sql_query = "select * from t1 order by no ASC";
-        $result =$db_link->db_link->query($sql_query);
-
         $i = 1;
-        while ($row_result = $result ->fetch(PDO::FETCH_ASSOC)) {
+        $read = T1::all();
+        foreach ($read as $key => $value) {
             echo "<tr>";
-            echo "<td>".	"<input type='radio' name='radio' value=".$row_result['no'].">"."</td>";
+            echo "<td>".	"<input type='radio' name='radio' value=".$value->no.">"."</td>";
             echo  "<td>$i</td>";
-            echo  "<td>".$row_result['item']."</td>";
-            echo  "<td>".$row_result['status']."</td>";
-            echo  "<td>".$row_result['update_time']."</td>";
-            echo  "<td>".$row_result['update_user']."</td>";
+            echo  "<td>".$value->item."</td>";
+            echo  "<td>".$value->status."</td>";
+            echo  "<td>".$value->update_time."</td>";
+            echo  "<td>".$value->update_user."</td>";
             echo  "</tr>";
             $i++;
         }
-        // if (isset($_SESSION["member"])) {
             ?>
  <input type="submit" value="修改" name="update">
  <input type="submit" value="刪除"  name="delete">
  <input type="submit" value="已完成/未完成"  name="complete">
-<!-- <?php
-//}
-?> -->
+
 </form>
 </table>
 </body>
@@ -97,16 +73,16 @@ header("Connect-Type:text/html ; charset = utf8");
 
 <?php
 if (isset($_GET['update']) == true || isset($_GET['delete']) == true || isset($_GET['complete']) == true) {
-    if ($_GET['update'] == '修改') {
-        header("Location:update.php?radio=".$_GET['radio']."");
-    }
-    if ($_GET['delete'] == '刪除') {
-        header("Location:delete.php?radio=".$_GET['radio']."");
-    }
-    if ($_GET['complete'] == '已完成/未完成') {
-        header("Location:complete.php?radio=".$_GET['radio']."");
-    }
-}
+                if ($_GET['update'] == '修改') {
+                    header("Location:update.php?radio=".$_GET['radio']."");
+                }
+                if ($_GET['delete'] == '刪除') {
+                    header("Location:delete.php?radio=".$_GET['radio']."");
+                }
+                if ($_GET['complete'] == '已完成/未完成') {
+                    header("Location:complete.php?radio=".$_GET['radio']."");
+                }
+            }
          function getRemoteIPAddress()
          {
              if (!empty($_SERVER['HTTP_CLIENT_IP'])) {

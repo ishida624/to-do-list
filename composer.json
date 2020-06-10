@@ -8,7 +8,10 @@
             "email": "ishida624@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "illuminate/events": "^7.14",
+        "illuminate/database": "^7.14"
+    },
     "autoload":{
     	"psr-4":{
 	"lib\\":"lib/"

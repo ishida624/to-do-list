@@ -1,17 +1,12 @@
 <?php
-include("vendor/autoload.php");
-include("lib/pdo-config.php");
-use lib\Pdocon;
+include __DIR__ . '/app/Pdo_start.php';
+include __DIR__ . '/app/models/todolist_model.php';
 
 session_start();
 if (isset($_SESSION['member'])) {
-    $db_link = new Pdocon($servername, $username, $password, $dbname);
-
     if (isset($_GET["action"])=="add") {
-        $sql_query = "delete from t1  where no=?";
-        $stmt = $db_link ->db_link-> prepare($sql_query);
-
-        $stmt -> execute(array($_GET["no"]));
+        $delete = T1::find($_GET["no"]);
+        $delete->delete();
         header("Location:todolist.php");
     }
 } else {

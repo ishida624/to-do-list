@@ -1,16 +1,11 @@
 <?php
-include("vendor/autoload.php");
-include("lib/pdo-config.php");
-use lib\Pdocon;
+include __DIR__ . '/app/Pdo_start.php';
+include __DIR__ . '/app/models/todolist_model.php';
 
 session_start();
 if (isset($_SESSION['member'])) {
-    $db_link = new Pdocon($servername, $username, $password, $dbname);
     if (isset($_GET["action"])=="add") {
-        $sql_query = "update t1 set no=?,item=?,update_user=? where no=?";
-        $stmt = $db_link ->db_link-> prepare($sql_query);
-
-        $stmt -> execute(array($_GET["no"],$_GET["item"],$_SESSION['member'],$_GET["no"]));
+        T1::where('no', $_GET["no"])->update(['item'=>$_GET["item"],'update_user'=>$_SESSION['member']]);
 
         header("Location:todolist.php");
     }
